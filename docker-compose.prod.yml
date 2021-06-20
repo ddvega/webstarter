@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  nginx:
+    restart: always
+    container_name: nginx
+    build:
+      dockerfile: Dockerfile.nginx
+      context: ./
+    ports:
+      - '80:80'
+  db:
+    image: mongo
+    restart: always
+    container_name: mongodb
+    volumes:
+      - ./mongo/data:/data/db
+    ports:
+      - 27017:27017
+  server:
+    restart: always
+    container_name: server
+    build:
+      context: ./
+      dockerfile: Dockerfile.server
+    depends_on:
+      - db
+      - nginx
+    env_file:
+      - ./env_files/.env.production
+    ports:
+      - '3001:3001'
+  client:
+    container_name: client
+    build:
+      context: ./
+      dockerfile: Dockerfile.client
+    env_file:
+      - ./env_files/.env.production
+    links:
+      - server

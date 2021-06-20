@@ -1,0 +1,16 @@
+{
+  "name": "appnamehere",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "install": "npm --prefix ./server install ./server && npm --prefix ./client install ./client",
+    "dev": "docker-compose -f docker-compose.yml up --remove-orphans --build",
+    "prod": "docker-compose -f docker-compose.prod.yml up -d --build",
+    "stop-dev": "docker-compose -f docker-compose.yml stop",
+    "stop-prod": "docker-compose -f docker-compose.prod.yml stop",
+    "log-dev": "docker-compose -f docker-compose.yml logs --follow --timestamps",
+    "log-prod": "docker-compose -f docker-compose.prod.yml logs --follow --timestamps"
+  },
+  "author": "David Vega",
+  "license": "MIT"
+}

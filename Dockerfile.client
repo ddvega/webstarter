@@ -1,0 +1,9 @@
+FROM node:14
+WORKDIR /app
+COPY ./client/package*.json ./
+RUN npm install
+COPY ./client/ .
+ENV PORT=3000
+RUN npm run build
+EXPOSE ${PORT}
+CMD [ "npm", "start" ]

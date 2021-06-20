@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+  db:
+    image: mongo
+    restart: always
+    container_name: mongodb
+    volumes: 
+        - ./mongo/data:/data/db
+    ports:
+        - 27017:27017
+  api:
+    restart: always
+    container_name: server
+    build:
+      context: ./
+      dockerfile: Dockerfile.server
+    depends_on:
+      - db
+    volumes:
+      - ./server/:/app/
+      - /app/node_modules
+    env_file:
+      - ./env_files/.env.development
+    ports:
+      - "3001:3001"
+    command: npx nodemon server.js 
+  client:
+    container_name: client
+    build:
+      context: ./
+      dockerfile: Dockerfile.client
+    volumes:
+      - ./client/:/app/
+      - /app/node_modules
+    env_file:
+      - ./env_files/.env.development
+    links:
+      - api
+    ports:
+      - "3000:3000"
+    command: npm run dev
+  
