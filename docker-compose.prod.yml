@@ -36,5 +36,8 @@ services:
       dockerfile: Dockerfile.client
     env_file:
       - ./env_files/.env.production
+    ports:
+      - "${PORT:-3000}:3000"
     links:
       - server
+    command: bash -c "npm run build && node server.js"
