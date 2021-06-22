@@ -1,8 +1,59 @@
 version: '3.8'
+# services:
+#   nginx:
+#     restart: always
+#     container_name: prod_nginx
+#     build:
+#       dockerfile: Dockerfile.nginx
+#       context: ./
+#     ports:
+#       - '80:80'
+#   mongo:
+#     image: mongo:4.4-bionic
+#     ports:
+#       - '27017:27017'
+#     networks:
+#       - mern-app
+#     volumes:
+#       - ./mongo/data:/data/db
+#   api-server:
+#     container_name: prod_api_server
+#     restart: always
+#     env_file: ./env_files/.env.production
+#     build:
+#       context: ./
+#       dockerfile: ./Dockerfile.server
+#     ports:
+#       - '3001:3001'
+#     networks:
+#       - mern-app
+#     depends_on:
+#       - mongo
+#       - nginx
+#   react-app:
+#     container_name: prod_react_app
+#     env_file: ./env_files/.env.production
+#     stdin_open: true
+#     build:
+#       context: ./
+#       dockerfile: ./Dockerfile.client
+#     ports:
+#       - '3000:3000'
+#     networks:
+#       - mern-app
+#     command: bash -c "node production_server.js"
+# networks:
+#   mern-app:
+#     driver: bridge
+# volumes:
+#   mongo-data:
+#     driver: local
+  
+
 services:
   nginx:
     restart: always
-    container_name: nginx
+    container_name: prod_nginx
     build:
       dockerfile: Dockerfile.nginx
       context: ./
@@ -11,26 +62,25 @@ services:
   db:
     image: mongo
     restart: always
-    container_name: mongodb
+    container_name: prod_mongodb
     volumes:
       - ./mongo/data:/data/db
     ports:
       - 27017:27017
   server:
     restart: always
-    container_name: server
+    container_name: prod_server
     build:
       context: ./
       dockerfile: Dockerfile.server
     depends_on:
       - db
-      - nginx
     env_file:
       - ./env_files/.env.production
     ports:
       - '3001:3001'
   client:
-    container_name: client
+    container_name: prod_client
     build:
       context: ./
       dockerfile: Dockerfile.client
@@ -40,4 +90,4 @@ services:
       - "${PORT:-3000}:3000"
     links:
       - server
-    command: bash -c "npm run build && node server.js"
+    command: bash -c "node production_server.js"

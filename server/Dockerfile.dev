@@ -1,8 +1,8 @@
 FROM node:14
 WORKDIR /app
-COPY ./server/package*.json ./
+COPY package.json .
 RUN npm install
-COPY ./server/ .
+COPY . .
 ENV PORT=3001
 EXPOSE ${PORT}
 CMD ["npm", "start"]

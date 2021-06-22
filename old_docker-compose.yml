@@ -3,14 +3,14 @@ services:
   db:
     image: mongo
     restart: always
-    container_name: mongodb
+    container_name: mongodb_dev
     volumes: 
         - ./mongo/data:/data/db
     ports:
         - 27017:27017
   api:
     restart: always
-    container_name: server
+    container_name: server_dev
     build:
       context: ./
       dockerfile: Dockerfile.server
@@ -25,7 +25,7 @@ services:
       - "3001:3001"
     command: npx nodemon server.js 
   client:
-    container_name: client
+    container_name: client_dev
     build:
       context: ./
       dockerfile: Dockerfile.client
@@ -38,5 +38,5 @@ services:
       - api
     ports:
       - "3000:3000"
-    command: npm start
+    command: bash -c "npm start"
   
