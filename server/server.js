@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:false}))
 app.use(cookieParser());
 
-app.use('/server', apiRouter);
+app.use('/api', apiRouter);
 
 app.get('/', (req, res) => {
   res.send({ greeting: 'Hello world!' });

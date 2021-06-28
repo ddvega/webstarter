@@ -1,93 +1,58 @@
-version: '3.8'
-# services:
-#   nginx:
-#     restart: always
-#     container_name: prod_nginx
-#     build:
-#       dockerfile: Dockerfile.nginx
-#       context: ./
-#     ports:
-#       - '80:80'
-#   mongo:
-#     image: mongo:4.4-bionic
-#     ports:
-#       - '27017:27017'
-#     networks:
-#       - mern-app
-#     volumes:
-#       - ./mongo/data:/data/db
-#   api-server:
-#     container_name: prod_api_server
-#     restart: always
-#     env_file: ./env_files/.env.production
-#     build:
-#       context: ./
-#       dockerfile: ./Dockerfile.server
-#     ports:
-#       - '3001:3001'
-#     networks:
-#       - mern-app
-#     depends_on:
-#       - mongo
-#       - nginx
-#   react-app:
-#     container_name: prod_react_app
-#     env_file: ./env_files/.env.production
-#     stdin_open: true
-#     build:
-#       context: ./
-#       dockerfile: ./Dockerfile.client
-#     ports:
-#       - '3000:3000'
-#     networks:
-#       - mern-app
-#     command: bash -c "node production_server.js"
-# networks:
-#   mern-app:
-#     driver: bridge
-# volumes:
-#   mongo-data:
-#     driver: local
-  
-
+version: '3'
 services:
-  nginx:
-    restart: always
-    container_name: prod_nginx
-    build:
-      dockerfile: Dockerfile.nginx
-      context: ./
-    ports:
-      - '80:80'
-  db:
+  # nginx:
+  #   container_name: nginx_prod
+  #   restart: always
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: ./nginx
+  #   ports:
+  #     - '80:80'
+  mongo:
+    container_name: mongo_prod
     image: mongo
-    restart: always
-    container_name: prod_mongodb
+    ports:
+      - '27017:27017'
     volumes:
       - ./mongo/data:/data/db
-    ports:
-      - 27017:27017
-  server:
+  api:
+    container_name: api_prod
     restart: always
-    container_name: prod_server
+    #env_file: ./env_files/.env.production
+    # environment:
+    #   PORT: 3001
+    #   MONGO_URI: mongodb://mongo:27017/appnamehere
+
     build:
-      context: ./
-      dockerfile: Dockerfile.server
-    depends_on:
-      - db
-    env_file:
-      - ./env_files/.env.production
+      dockerfile: Dockerfile
+      context: ./server
+    # volumes:
+    #   - /app/node_modules
+    #   - ./server:/app
+    links:
+      - mongo
     ports:
       - '3001:3001'
+    depends_on:
+      - mongo
   client:
-    container_name: prod_client
+    container_name: client_prod
+
+    stdin_open: true
     build:
-      context: ./
-      dockerfile: Dockerfile.client
-    env_file:
-      - ./env_files/.env.production
+      dockerfile: Dockerfile.prod
+      context: ./client
     ports:
-      - "${PORT:-3000}:3000"
+      - '80:80'
+    # volumes:
+    #   - /app/node_modules
+    #   - ./client:/app
+    # env_file: ./env_files/.env.production
+    # environment:
+    #   REACT_APP_API_URL: 'http://192.168.1.98:3001/api'
+    #   REACT_APP_REDIRECT: 'http://192.168.1.98:80'
     links:
-      - server
-    command: bash -c "node production_server.js"
+      - api
+volumes:
+  mongo-data:
+    driver: local
