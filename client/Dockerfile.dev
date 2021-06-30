@@ -7,7 +7,6 @@ ENV PATH /app/node_modules/.bin:$PATH
 ENV REACT_APP_API_URL="http://localhost:3001/api"
 ENV REACT_APP_REDIRECT="http://localhost:3000"
 ENV PORT=3000
-# RUN npm run build
 EXPOSE ${PORT}
 CMD [ "npm", "run", "start" ]
 

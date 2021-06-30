@@ -1,13 +1,5 @@
 version: '3'
 services:
-  # nginx:
-  #   container_name: nginx_prod
-  #   restart: always
-  #   build:
-  #     dockerfile: Dockerfile
-  #     context: ./nginx
-  #   ports:
-  #     - '80:80'
   mongo:
     container_name: mongo_prod
     image: mongo
@@ -18,17 +10,9 @@ services:
   api:
     container_name: api_prod
     restart: always
-    #env_file: ./env_files/.env.production
-    # environment:
-    #   PORT: 3001
-    #   MONGO_URI: mongodb://mongo:27017/appnamehere
-
     build:
       dockerfile: Dockerfile
       context: ./server
-    # volumes:
-    #   - /app/node_modules
-    #   - ./server:/app
     links:
       - mongo
     ports:
@@ -37,20 +21,13 @@ services:
       - mongo
   client:
     container_name: client_prod
-
     stdin_open: true
     build:
       dockerfile: Dockerfile.prod
       context: ./client
     ports:
       - '80:80'
-    # volumes:
-    #   - /app/node_modules
-    #   - ./client:/app
-    # env_file: ./env_files/.env.production
-    # environment:
-    #   REACT_APP_API_URL: 'http://192.168.1.98:3001/api'
-    #   REACT_APP_REDIRECT: 'http://192.168.1.98:80'
+      - '443:443'
     links:
       - api
 volumes:

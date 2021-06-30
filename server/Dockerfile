@@ -1,13 +1,3 @@
-# FROM node:alpine
-# WORKDIR '/app'
-# COPY ./package.json ./
-# RUN npm install
-# COPY . .
-# ENV PORT=3001
-# # RUN npm run build
-# EXPOSE ${PORT}
-# CMD [ "npm", "run", "start" ]
-
 FROM node:14
 WORKDIR /usr/src/server
 COPY package*.json ./
